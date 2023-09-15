@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+
+/DogoWorld/x64/*
+/DogoWorld/.vs/*

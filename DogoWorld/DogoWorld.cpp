@@ -3,18 +3,25 @@
 #include "Locations.h"
 #include "Dogo.h"
 #include "EntityNames.h"
+#include "EntityManager.h"
 #include <windows.h>
-
+#include "MessageDispatcher.h"
 int main()
 {
-    //create a Dogo
-    Dogo dogo(ent_Dogo);
+    srand((unsigned)time(NULL));
 
+    //create a Dogo
+    Dogo* Dog = new Dogo(ent_Dogo);
+    EntityMgr->RegisterEntity(Dog);
     //simply run the miner through a few Update calls
-    for (int i = 0; i < 20; ++i)
+    for (int i = 0; i < 200; ++i)
     {
-        dogo.Update();
-        Sleep(2300);
+        Dog->Update();
+        
+        Dispatch->DispatchDelayedMessages();
+        Sleep(4300);
+
+
     }
     return 0;
 }

@@ -12,7 +12,7 @@
 #include "State.h"
 
 class Dogo; //check-- #include ??
-
+struct Telegram;
 
 //------------------------------------------------------------------------
 //
@@ -21,7 +21,7 @@ class Dogo; //check-- #include ??
 //  to \. If he gets thirsty he'll change state
 //  to QuenchThirst
 //------------------------------------------------------------------------
-class EnterGardenAndDig : public State
+class EnterGardenAndDig : public State<Dogo>
 {
 private:
 	EnterGardenAndDig() {}
@@ -40,6 +40,7 @@ public:
 	virtual void Enter(Dogo* dogo);
 	virtual void Execute(Dogo* dogo);
 	virtual void Exit(Dogo* dogo);
+	virtual bool OnMessage(Dogo* agent, const Telegram& msg);
 };
 
 //------------------------------------------------------------------------
@@ -49,7 +50,7 @@ public:
 //  keep going to get more potato
 //------------------------------------------------------------------------
 
-class VisitHomeAndDepositPotato : public State
+class VisitHomeAndDepositPotato : public State<Dogo>
 {
 private:
 	VisitHomeAndDepositPotato() {}
@@ -62,14 +63,55 @@ public:
 	virtual void Enter(Dogo* dogo);
 	virtual void Execute(Dogo* dogo);
 	virtual void Exit(Dogo* dogo);
+	virtual bool OnMessage(Dogo* agent, const Telegram& msg);
 };
+
+//------------------------------------------------------------------------
+//
+//  Dogo will set cooking potatoes and go to sleep
+//------------------------------------------------------------------------
+class CookPotatoes : public State<Dogo>
+{
+private:
+	CookPotatoes() {}
+
+	CookPotatoes(const CookPotatoes&);
+	CookPotatoes& operator=(const CookPotatoes&);
+
+public:
+	static CookPotatoes* Instance();
+	virtual void Enter(Dogo* dogo);
+	virtual void Execute(Dogo* dogo);
+	virtual void Exit(Dogo* dogo);
+	virtual bool OnMessage(Dogo* pDogo, const Telegram& msg);
+};
+//------------------------------------------------------------------------
+//Dogo going to eat potatoes
+//------------------------------------------------------------------------
+class EatPotatoes : public State<Dogo>
+{
+private:
+	EatPotatoes() {}
+
+	EatPotatoes(const EatPotatoes&);
+	EatPotatoes& operator=(const EatPotatoes&);
+
+public:
+	static EatPotatoes* Instance();
+	virtual void Enter(Dogo* dogo);
+	virtual void Execute(Dogo* dogo);
+	virtual void Exit(Dogo* dogo);
+	virtual bool OnMessage(Dogo* pDogo, const Telegram& msg);
+};
+
+
 
 //------------------------------------------------------------------------
 //
 //  Dogo will go sleep until his fatigue is decreased
 //  sufficiently
 //------------------------------------------------------------------------
-class GoBedAndSleep : public State
+class GoBedAndSleep : public State<Dogo>
 {
 private:
 
@@ -89,6 +131,7 @@ public:
 	virtual void Execute(Dogo* miner);
 
 	virtual void Exit(Dogo* miner);
+	virtual bool OnMessage(Dogo* agent, const Telegram& msg);
 };
 
 #endif

@@ -128,20 +128,28 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BaseGameEntity.cpp" />
+    <ClCompile Include="CrudeTimer.cpp" />
     <ClCompile Include="Dogo.cpp" />
     <ClCompile Include="DogoOwnedStates.cpp" />
     <ClCompile Include="DogoWorld.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="FrameCounter.cpp" />
+    <ClCompile Include="MessageDispatcher.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseGameEntity.h" />
+    <ClInclude Include="CrudeTimer.h" />
     <ClInclude Include="Dogo.h" />
     <ClInclude Include="DogoOwnedStates.h" />
+    <ClInclude Include="EntityManager.h" />
     <ClInclude Include="EntityNames.h" />
+    <ClInclude Include="FrameCounter.h" />
     <ClInclude Include="Locations.h" />
+    <ClInclude Include="MessageDispatcher.h" />
+    <ClInclude Include="MessageTypes.h" />
     <ClInclude Include="State.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="CMakeLists.txt" />
+    <ClInclude Include="StateMachine.h" />
+    <ClInclude Include="Telegram.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,6 +1,8 @@
-#pragma once ////////////////////////////////////////sus
-#ifndef ENTITY_H   //check--
+
+#ifndef ENTITY_H
 #define ENTITY_H
+
+#include "Telegram.h"
 
 class BaseGameEntity
 {
@@ -19,6 +21,7 @@ public:
 	virtual ~BaseGameEntity() {}
 	//all entities must implement an update function
 	virtual void Update() = 0;
+	virtual bool  HandleMessage(const Telegram& msg) = 0;
 	int ID()const { return m_ID; }
 };
 #endif

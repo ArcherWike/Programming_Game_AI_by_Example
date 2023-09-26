@@ -1,18 +1,24 @@
 #include "Dogo.h"
-#include "DogoOwnedStates.h"
 
-Dogo::Dogo(int id) :BaseGameEntity(id),
-m_Location(bed),
-m_iPotatoAmount(0),
-m_iPotatoInHome(0),
-m_iThirst(0),
-m_iFatigue(0),
-m_iFun(0),
-m_pCurrentState(GoBedAndSleep::Instance())
-{}
-//check--
+bool Dogo::HandleMessage(const Telegram& msg)
+{
+	return m_pStateMachine->HandleMessage(msg);
+}
 
-//--------------------------- ChangeState -------------------------------------
+void Dogo::Update()
+{
+	m_iThirst += 1;
+
+	m_pStateMachine->Update();
+
+	//if (m_pCurrentState) //check--
+	//{
+	//	m_pCurrentState->Execute(this);
+	//}
+
+}
+
+/*/--------------------------- ChangeState -------------------------------------
 //-----------------------------------------------------------------------------
 
 void  Dogo::ChangeState(State* pNewState)
@@ -31,7 +37,7 @@ void  Dogo::ChangeState(State* pNewState)
 	m_pCurrentState->Enter(this);
 }
 
-//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------/*/
 // Dogo::
 
 void Dogo::AddToPotatoAmount(const int val)
@@ -63,13 +69,3 @@ bool Dogo::Fatigued()const //chceck--
 	return false;
 }
 
-void Dogo::Update()
-{
-	m_iThirst += 1;
-
-	if (m_pCurrentState) //check--
-	{
-		m_pCurrentState->Execute(this);
-	}
-
-}

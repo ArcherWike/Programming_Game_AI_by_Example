@@ -18,7 +18,7 @@
 
 struct Telegram;
 
-const int MaxPotato = 5;
+const int MaxPotato = 30;
 
 const int HungryThreshold = 5;
 const int ComfortLevel = 5;
@@ -89,7 +89,7 @@ public:
 	void AddToWealth(const int val);
 
 	bool Hungry()const { return m_iHungry >= HungryThreshold; };
-	void DecreaseHungry() { m_iHungry -= 1; }
+	void DecreaseHungry() { m_iHungry -= 5; }
 	void IncreaseHungry() { m_iHungry += 1; }
 
 	bool Cooking()const { return m_iCooking; }

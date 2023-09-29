@@ -11,6 +11,7 @@
 #include <iostream>
 
 
+
 //--------------------------------------methods for EnterGardenAndDig
 
 EnterGardenAndDig* EnterGardenAndDig::Instance() //check--
@@ -33,23 +34,51 @@ void EnterGardenAndDig::Enter(Dogo* pDogo)
 void EnterGardenAndDig::Execute(Dogo* pDogo)
 {
 	//Dogo dig until it is carring in excess of MaxPotato.
-	pDogo->AddToPotatoAmount(1);
+	
 	
 	pDogo->IncreaseFatigue();
 	pDogo->IncreaseHungry();
 	
+	
 
-	std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Digging up a potato";
+	int random_num = rand() % 10;
+	pDogo->AddToPotatoAmount(random_num);
+	switch (random_num)
+	{
+	case 0:
+		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Failed to dig up anything this time";
+		break;
+	case 5:
+		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Digging up a potato...";
+		break;
+	case 7:
+		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Digging up a potato..";
+		break;
+	case 9:
+		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Digging up lots of potato";
+		break;
+	default:
+		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Digging up a potato.";
+		break;
+	}
 
-	if (pDogo->PocketFull())
+
+	//back to home if true
+	/*if (pDogo->Hungry() && pDogo->GetFSM()->PreviousState() != VisitHomeAndDepositPotato::Instance())
 	{
 		pDogo->GetFSM()->ChangeState(VisitHomeAndDepositPotato::Instance());
-	}	
+		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": I'm hungry :saddge:";
+	}*/
+	if (pDogo->PocketFull())
+	{
+		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": My pockets is full of sweet potato";
+		pDogo->GetFSM()->ChangeState(VisitHomeAndDepositPotato::Instance());
+	}
 }
 
 void EnterGardenAndDig::Exit(Dogo* pDogo)
 {
-	std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Ah I'm leaving garden with pockets full of sweet potato!";
+	std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Ah I'm leaving garden!";
 }
 
 bool EnterGardenAndDig::OnMessage(Dogo* pDogo, const Telegram& msg)
@@ -98,6 +127,7 @@ void VisitHomeAndDepositPotato::Execute(Dogo* pDogo)
 		else
 		{
 			std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Not enought potatoes :C";
+			pDogo->GetFSM()->ChangeState(EnterGardenAndDig::Instance());
 		}
 	}
 	//wealthy enough to have a well earned rest?
@@ -141,7 +171,7 @@ void CookPotatoes::Enter(Dogo* pDogo)
 		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Putting the potato in the oven";
 
 		//send a delayed message myself so that I know when to take the potato are cooked
-		Dispatch->myDispatchMessage(-1,                  //time delay
+		Dispatch->myDispatchMessage(15,                  //time delay
 			pDogo->ID(),           //sender ID
 			ent_Dogo,           //receiver ID
 			Msg_PotatoReady,        //msg
@@ -153,7 +183,21 @@ void CookPotatoes::Enter(Dogo* pDogo)
 
 void CookPotatoes::Execute(Dogo* pDogo)
 {
-	std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": sdfadsan";
+	int random_num = rand() %3;
+	switch (random_num)
+	{
+	case 0:
+		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": still waiting.";
+		break;
+	case 1:
+		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": still waiting..";
+		break;
+	case 2:
+		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": still waiting...";
+		break;
+	default:
+		break;
+	}
 }
 
 void CookPotatoes::Exit(Dogo* pDogo)
@@ -204,19 +248,34 @@ void EatPotatoes::Execute(Dogo* pDogo)
 
 	if (!pDogo->Hungry())
 	{
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": " << "It's time to return to work!";
-		pDogo->GetFSM()->ChangeState(EnterGardenAndDig::Instance());
+		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": " << "After such good food, one should relax!";
+		pDogo->GetFSM()->ChangeState(GoBedAndSleep::Instance());
 	}
 	else 
 	{
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": " << "Am am am... Tastes real good too!";
+		int random_num = rand() % 5;
+		switch (random_num)
+		{
+		case 0:
+			std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Am am am...";
+			break;
+		case 1:
+			std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": am..";
+			break;
+		case 2:
+			std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": " << "Oh Tastes real good!";
+			break;
+		default:
+			std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": am am..";
+			break;
+		}
 		pDogo->DecreaseHungry();
 	}
 }
 
 void EatPotatoes::Exit(Dogo* pDogo)
 {
-	std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": " << "Ah better get back to garden";
+	std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": " << "Leave kitchen";
 }
 bool EatPotatoes::OnMessage(Dogo* pDogo, const Telegram& msg)
 {

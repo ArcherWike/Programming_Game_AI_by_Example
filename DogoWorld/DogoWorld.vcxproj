@@ -135,6 +135,7 @@
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="FrameCounter.cpp" />
     <ClCompile Include="MessageDispatcher.cpp" />
+    <ClCompile Include="NeighborOwnedStates.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseGameEntity.h" />
@@ -147,6 +148,8 @@
     <ClInclude Include="Locations.h" />
     <ClInclude Include="MessageDispatcher.h" />
     <ClInclude Include="MessageTypes.h" />
+    <ClInclude Include="Neighbor.h" />
+    <ClInclude Include="NeighborOwnedStates.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateMachine.h" />
     <ClInclude Include="Telegram.h" />

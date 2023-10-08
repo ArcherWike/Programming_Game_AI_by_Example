@@ -135,6 +135,7 @@
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="FrameCounter.cpp" />
     <ClCompile Include="MessageDispatcher.cpp" />
+    <ClCompile Include="Neighbor.cpp" />
     <ClCompile Include="NeighborOwnedStates.cpp" />
   </ItemGroup>
   <ItemGroup>

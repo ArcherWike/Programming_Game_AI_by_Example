@@ -6,6 +6,7 @@ enum message_type
 {
     Msg_StrangerComing,
     Msg_PotatoReady,
+    Msg_DogoIsDangerous,
 };
 
 
@@ -20,6 +21,9 @@ inline std::string MsgToStr(int msg)
     case 1:
 
         return "Potatoes are cooked";
+
+    case 2:
+        return "Dogo is dangerous";
 
     default:
 

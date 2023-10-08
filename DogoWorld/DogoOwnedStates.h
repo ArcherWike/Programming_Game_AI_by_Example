@@ -45,6 +45,28 @@ public:
 
 //------------------------------------------------------------------------
 //
+//  In this state the Dogo will walk to the gate and start barking
+//------------------------------------------------------------------------
+class BarkAtStranger : public State<Dogo>
+{
+private:
+	BarkAtStranger() {}
+
+	BarkAtStranger(const BarkAtStranger&);
+	BarkAtStranger& operator=(const BarkAtStranger&);
+
+public:
+	//singleton
+
+	static BarkAtStranger* Instance(); //chceck--
+	virtual void Enter(Dogo* dogo);
+	virtual void Execute(Dogo* dogo);
+	virtual void Exit(Dogo* dogo);
+	virtual bool OnMessage(Dogo* agent, const Telegram& msg);
+};
+
+//------------------------------------------------------------------------
+//
 //  Entity will go to the kitchen and deposit any potato he is carrying. If Dogo
 //  is subsequently wealthy enough he'll go sleep, otherwise he'll
 //  keep going to get more potato

@@ -2,6 +2,7 @@
 //
 #include "Locations.h"
 #include "Dogo.h"
+#include "Neighbor.h"
 #include "EntityNames.h"
 #include "EntityManager.h"
 #include <windows.h>
@@ -13,10 +14,18 @@ int main()
     //create a Dogo
     Dogo* Dog = new Dogo(ent_Dogo);
     EntityMgr->RegisterEntity(Dog);
+
+    //create the Neighbor
+    Neighbor* neighbor = new Neighbor(ent_Neighbor);
+    EntityMgr->RegisterEntity(neighbor); 
+    
+    // 
+    
     //simply run the miner through a few Update calls
     for (int i = 0; i < 200; ++i)
     {
         Dog->Update();
+        neighbor->Update();
         
         Dispatch->DispatchDelayedMessages();
         Sleep(4300);

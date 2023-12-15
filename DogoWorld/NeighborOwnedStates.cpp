@@ -29,7 +29,7 @@ void EnterDogoGarden::Execute(Neighbor* pNeighbor)
 {
 	if (!pNeighbor->AtDogoArea())
 	{
-		std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": o Piesel co tam masz w ogrodku";
+		std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": oh! Dog what have you got in the garden?";
 		//send a delayed message myself so that I know when to take the potato are cooked
 		Dispatch->myDispatchMessage(15,                  //time delay
 			pNeighbor->ID(),           //sender ID
@@ -39,14 +39,14 @@ void EnterDogoGarden::Execute(Neighbor* pNeighbor)
 		pNeighbor->SetAtDogoArea(true);
 
 	}
-	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": *zaglada na ogrod*";
+	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": *looking at the garden*";
 }
 
 void EnterDogoGarden::Exit(Neighbor* pNeighbor)
 {
 	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": aaaa..";
-	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": *skok w tyl*";
-	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": uciekam stad aaaa...";
+	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": *jump back*";
+	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": I'm running away from here uh aaaa...";
 }
 
 bool EnterDogoGarden::OnMessage(Neighbor* pNeighbor, const Telegram& msg)
@@ -55,10 +55,10 @@ bool EnterDogoGarden::OnMessage(Neighbor* pNeighbor, const Telegram& msg)
 	{
 	case Msg_DogoIsDangerous:
 	{
-		std::cout << "\nMessage received by " << GetNameOfEntity(pNeighbor->ID(),false) <<
+		std::cout << "\nMessage received by " << GetNameOfEntity(pNeighbor->ID()) <<
 			" at time: " << Clock->GetCurrentTime();
 
-		std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": aaa boje sie tego piesla!! aaaaa!";
+		std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": aaa I'm scared of that dog! aaaaa!";
 
 		pNeighbor->GetFSM()->ChangeState(EscapesHome::Instance());
 	}
@@ -76,7 +76,7 @@ EscapesHome* EscapesHome::Instance()
 
 void EscapesHome::Enter(Neighbor* pNeighbor)
 {
-	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": pora sie zwijavc";
+	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": it's time to go";
 }
 
 void EscapesHome::Execute(Neighbor* pNeighbor)
@@ -85,24 +85,24 @@ void EscapesHome::Execute(Neighbor* pNeighbor)
 	switch (random_num)
 	{
 	case 0:
-		std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": uf juz blisko...";
+		std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": ugh It's close...";
 		pNeighbor->GetFSM()->ChangeState(WatchTV::Instance());
 		break;
 	case 1:
 		std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": Aa..";
 	case 2:
-		std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": Czy ja napewno w dobra strone biegne?? ";
+		std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": Am I sure I'm running in the right direction?? ";
 		break;
 	default:
 		std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": aaA!";
 		break;
 	}
-	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": aaaaaa uciekam";
+	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": aaaaaa I'm run away";
 }
 
 void EscapesHome::Exit(Neighbor* pNeighbor)
 {
-	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": o  widze dom";
+	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": uff! I can see my lovely home";
 }
 
 bool EscapesHome::OnMessage(Neighbor* pNeighbor, const Telegram& msg)
@@ -120,7 +120,6 @@ WatchTV* WatchTV::Instance()
 
 void WatchTV::Enter(Neighbor* pNeighbor)
 {
-	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": oh moj tv";
 	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": zobaczmy co ciekawgo leci";
 }
 

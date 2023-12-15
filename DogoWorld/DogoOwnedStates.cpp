@@ -10,7 +10,13 @@
 
 #include <iostream>
 
+#ifdef TEXTOUTPUT
+#include <fstream>
+extern std::ofstream os;
+#define cout os
+#endif
 
+#define FOREGROUND_GRay 0xAAAA // text color is intensified.
 
 
 //--------------------------------------methods for EnterGardenAndDig
@@ -62,16 +68,16 @@ void EnterGardenAndDig::Execute(Dogo* pDogo)
 
 
 	//back to home if true
-	/*if (pDogo->Hungry() && pDogo->GetFSM()->PreviousState() != VisitHomeAndDepositPotato::Instance())
+	if (pDogo->Hungry() && pDogo->GetFSM()->PreviousState() != VisitHomeAndDepositPotato::Instance())
 	{
 		pDogo->GetFSM()->ChangeState(VisitHomeAndDepositPotato::Instance());
 		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": I'm hungry :saddge:";
-	}*/
-	/*if (pDogo->PocketFull())
+	}
+	if (pDogo->PocketFull())
 	{
 		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": My pockets is full of sweet potato";
 		pDogo->GetFSM()->ChangeState(VisitHomeAndDepositPotato::Instance());
-	}*/
+	}
 }
 
 void EnterGardenAndDig::Exit(Dogo* pDogo)
@@ -79,13 +85,15 @@ void EnterGardenAndDig::Exit(Dogo* pDogo)
 	std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Ah I'm leaving garden!";
 }
 
+
 bool EnterGardenAndDig::OnMessage(Dogo* pDogo, const Telegram& msg)
 {
+	SetTextColor(BACKGROUND_INTENSITY | FOREGROUND_BLUE | 112 | FOREGROUND_BLUE);
 	switch (msg.Msg)
 	{
 		case Msg_StrangerComing:
 		{
-			std::cout << "\nMessage received by " << GetNameOfEntity(pDogo->ID(),false) <<
+			std::cout << "\nMessage received by " << GetNameOfEntity(pDogo->ID()) <<
 				" at time: " << Clock->GetCurrentTime();
 
 			pDogo->GetFSM()->ChangeState(BarkAtStranger::Instance());
@@ -273,11 +281,12 @@ void CookPotatoes::Exit(Dogo* pDogo)
 
 bool CookPotatoes::OnMessage(Dogo* pDogo, const Telegram& msg)
 {
+	SetTextColor(BACKGROUND_INTENSITY | FOREGROUND_BLUE | 112 | FOREGROUND_BLUE);
 	switch (msg.Msg)
 	{
 		case Msg_PotatoReady:
 		{
-			std::cout << "\nMessage received by " << GetNameOfEntity(pDogo->ID(),false) <<
+			std::cout << "\nMessage received by " << GetNameOfEntity(pDogo->ID()) <<
 				" at time: " << Clock->GetCurrentTime();
 
 			std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": I'm coming!";

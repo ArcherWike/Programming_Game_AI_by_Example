@@ -7,6 +7,9 @@ bool Dogo::HandleMessage(const Telegram& msg)
 
 void Dogo::Update()
 {
+	SetTextColor(0 | 3 | 0 | 3);
+	//SetTextColor(BACKGROUND_RED | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	//SetTextColor(8 | Fore);
 	m_iThirst += 1;
 
 	m_pStateMachine->Update();
@@ -38,7 +41,6 @@ void  Dogo::ChangeState(State* pNewState)
 }
 
 //------------------------------------------------------------------------------/*/
-// Dogo::
 
 void Dogo::AddToPotatoAmount(const int val)
 {

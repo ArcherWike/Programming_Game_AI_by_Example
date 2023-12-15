@@ -13,6 +13,7 @@ int main()
 
     //create a Dogo
     Dogo* Dog = new Dogo(ent_Dogo);
+    std::cout << "\n";
     EntityMgr->RegisterEntity(Dog);
 
     //create the Neighbor

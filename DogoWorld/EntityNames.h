@@ -3,6 +3,9 @@
 #define NAMES_H
 
 #include <string>
+#include <windows.h>
+#include <conio.h>
+
 
 enum
 {
@@ -23,5 +26,6 @@ inline std::string GetNameOfEntity(int n)
 	default:
 		return "UNKNOWN!";
 	}
+
 }
 #endif

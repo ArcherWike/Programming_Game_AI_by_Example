@@ -13,6 +13,8 @@
 #include "DogoOwnedStates.h"
 #include "StateMachine.h"
 
+#include "misc/ConsoleUtils.h"
+
 //check--
 //class State;
 

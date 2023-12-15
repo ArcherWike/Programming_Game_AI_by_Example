@@ -12,6 +12,8 @@
 //------------------------------------------------------------------------
 #pragma warning (disable:4786)
 
+#include "misc/ConsoleUtils.h"
+
 #include <set>
 
 

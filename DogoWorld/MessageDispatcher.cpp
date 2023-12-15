@@ -75,6 +75,7 @@ void MessageDispatcher::myDispatchMessage(double  delay,
     //if there is no delay, route telegram immediately                       
     if (delay <= 0.0f)
     {
+        SetTextColor(BACKGROUND_INTENSITY | 0 | 112 | 0);
         cout << "\nInstant telegram dispatched at time: " << Clock->GetCurrentTime()
             << " by " << GetNameOfEntity(pSender->ID()) << " for " << GetNameOfEntity(pReceiver->ID())
             << ". Msg is " << MsgToStr(msg);
@@ -86,6 +87,7 @@ void MessageDispatcher::myDispatchMessage(double  delay,
     //else calculate the time when the telegram should be dispatched
     else
     {
+        SetTextColor(BACKGROUND_INTENSITY | 0 | 112 | 0);
         double CurrentTime = Clock->GetCurrentTime();
 
         telegram.DispatchTime = CurrentTime + delay;

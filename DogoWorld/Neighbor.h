@@ -12,6 +12,8 @@
 #include "Locations.h"
 #include "NeighborOwnedStates.h"
 #include "StateMachine.h"
+#include "misc/ConsoleUtils.h"
+
 struct Telegram;
 
 class Neighbor : public BaseGameEntity

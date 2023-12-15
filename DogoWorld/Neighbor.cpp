@@ -7,11 +7,6 @@ bool Neighbor::HandleMessage(const Telegram& msg)
 
 void Neighbor::Update()
 {
+	SetTextColor(0 | 14 | 0 | 14);
 	m_pStateMachine->Update();
-
-	//if (m_pCurrentState) //check--
-	//{
-	//	m_pCurrentState->Execute(this);
-	//}
-
 }

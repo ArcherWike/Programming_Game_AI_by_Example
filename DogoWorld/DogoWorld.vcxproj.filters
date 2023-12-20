@@ -92,5 +92,11 @@
     <ClInclude Include="NeighborOwnedStates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Printable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NeighborPrintable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

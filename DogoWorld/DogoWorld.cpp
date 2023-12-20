@@ -14,6 +14,7 @@ int main()
     //create a Dogo
     Dogo* Dog = new Dogo(ent_Dogo);
     std::cout << "\n";
+
     EntityMgr->RegisterEntity(Dog);
 
     //create the Neighbor
@@ -26,10 +27,11 @@ int main()
     for (int i = 0; i < 200; ++i)
     {
         Dog->Update();
+        std::cout << "\n";
         neighbor->Update();
-        
+        std::cout << "\n";
         Dispatch->DispatchDelayedMessages();
-        Sleep(4300);
+        Sleep(900);
 
 
     }

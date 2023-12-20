@@ -33,3 +33,5 @@
 
 /DogoWorld/x64/*
 /DogoWorld/.vs/*
+/DogoWorld/DogoWorld/x64/*
+/Common/*

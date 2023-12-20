@@ -16,8 +16,6 @@ extern std::ofstream os;
 #define cout os
 #endif
 
-#define FOREGROUND_GRay 0xAAAA // text color is intensified.
-
 
 //--------------------------------------methods for EnterGardenAndDig
 
@@ -32,7 +30,7 @@ void EnterGardenAndDig::Enter(Dogo* pDogo)
 {
 	if (pDogo->Location() != garden)
 	{
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Hau hau... Walk to the garden";
+		std::cout << ": Hau hau... Walk to the garden";
 
 		pDogo->ChangeLocation(garden);
 	}
@@ -45,24 +43,24 @@ void EnterGardenAndDig::Execute(Dogo* pDogo)
 	pDogo->IncreaseFatigue();
 	pDogo->IncreaseHungry();
 	
-	int random_num = rand() % 10;
+	int random_num = rand() % 5;
 	pDogo->AddToPotatoAmount(random_num);
 	switch (random_num)
 	{
 	case 0:
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Failed to dig up anything this time";
+		pDogo->GetPrintable()->Show_user(": Failed to dig up anything this time :(");
 		break;
-	case 5:
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Digging up a potato...";
+	case 1:
+		pDogo->GetPrintable()->Show_user(": Digging up a potato...");
 		break;
-	case 7:
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Digging up a potato..";
+	case 2:
+		pDogo->GetPrintable()->Show_user(": Digging up a potato..");
 		break;
-	case 9:
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Digging up lots of potato";
+	case 3:
+		pDogo->GetPrintable()->Show_user(": Digging up lots of potato");
 		break;
 	default:
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Digging up a potato.";
+		pDogo->GetPrintable()->Show_user(": Digging up a potato.");
 		break;
 	}
 
@@ -71,18 +69,18 @@ void EnterGardenAndDig::Execute(Dogo* pDogo)
 	if (pDogo->Hungry() && pDogo->GetFSM()->PreviousState() != VisitHomeAndDepositPotato::Instance())
 	{
 		pDogo->GetFSM()->ChangeState(VisitHomeAndDepositPotato::Instance());
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": I'm hungry :saddge:";
+		pDogo->GetPrintable()->Show_user(": I'm hungry :saddge:");
 	}
 	if (pDogo->PocketFull())
 	{
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": My pockets is full of sweet potato";
+		pDogo->GetPrintable()->Show_user(": My pockets is full of sweet potato");
 		pDogo->GetFSM()->ChangeState(VisitHomeAndDepositPotato::Instance());
 	}
 }
 
 void EnterGardenAndDig::Exit(Dogo* pDogo)
 {
-	std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Ah I'm leaving garden!";
+	pDogo->GetPrintable()->Show_user(": Ah I'm leaving garden!");
 }
 
 
@@ -95,13 +93,15 @@ bool EnterGardenAndDig::OnMessage(Dogo* pDogo, const Telegram& msg)
 		{
 			std::cout << "\nMessage received by " << GetNameOfEntity(pDogo->ID()) <<
 				" at time: " << Clock->GetCurrentTime();
+			SetTextColor(0 | 0 | 0 | 0);
+			std::cout << "\n";
 
+			pDogo->SetBarking(false);
 			pDogo->GetFSM()->ChangeState(BarkAtStranger::Instance());
 		
 		}
 		return true;
 	}
-	return false;
 
 	//send msg to global message handler
 	return false;
@@ -117,38 +117,46 @@ BarkAtStranger* BarkAtStranger::Instance() //check--
 
 void BarkAtStranger::Enter(Dogo* pDogo)
 {
-	std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": o nie kto to na posesjii!!";
-	std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Juz tam biegneeem!!!";
+	pDogo->GetPrintable()->Show_user(": Someone is there! :sus:");
+	pDogo->GetPrintable()->Show_user(": I need to check it out!");
 }
 
 void BarkAtStranger::Execute(Dogo* pDogo)
 {
-	int random_num = rand() % 5;
-	switch (random_num)
-	{
-	case 0:
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Woof woof!!!";
-		break;
-	case 1:
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": woof...!!!";
-		break;
-	case 2:
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": " << "I'm danger!!! Woof woof!";
+	
+		int random_num = rand() % 10;
+		switch (random_num)
+		{
+		case 0:
+			pDogo->GetPrintable()->Show_user(": Woof woof!!!");
+			break;
+		case 2:
+			pDogo->GetPrintable()->Show_user(": I'm danger!!! Woof woof!");
+			break;
+		case 3:
+			pDogo->GetPrintable()->Show_user(": That's private area! What are you doing here??! I'll call the police! WOOF! woof!");
+			break;
+		case 7:
+			if (!pDogo->Barking())
+			{
+				//send a message to stranger neighbour that
+							// he should be feared if he want stay alive
+				Dispatch->myDispatchMessage(1, //time delay
+					pDogo->ID(),				//sender ID
+					ent_Neighbor,				//receiver ID
+					Msg_DogoIsDangerous,        //msg
+					0);
+				pDogo->SetBarking(true);
 
-		//send a message to stranger neighbour that
-		// he should be feared if he want stay alive
-		Dispatch->myDispatchMessage(-1, //time delay
-			pDogo->ID(),				//sender ID
-			ent_Neighbor,				//receiver ID
-			Msg_DogoIsDangerous,        //msg
-			0);
 
-		pDogo->GetFSM()->PreviousState();
-		break;
-	default:
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Woof!";
-		break;
-	}
+			}
+			pDogo->GetFSM()->ChangeState(pDogo->GetFSM()->PreviousState());
+		default:
+			break;
+		}
+	
+		
+	
 }
 
 void BarkAtStranger::Exit(Dogo* pDogo)
@@ -158,6 +166,8 @@ void BarkAtStranger::Exit(Dogo* pDogo)
 
 bool BarkAtStranger::OnMessage(Dogo* pDogo, const Telegram& msg)
 {
+
+
 	//send msg to global message handler
 	return false;
 }
@@ -175,7 +185,7 @@ void VisitHomeAndDepositPotato::Enter(Dogo* pDogo)
 	//on entry the dogo makes sure he is located at home
 	if (pDogo->Location() != home)							//check-- is possible
 	{
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Going to my lovely home! Yes sireee";
+		pDogo->GetPrintable()->Show_user(": Going to my lovely home! Yes sireee");
 
 		pDogo->ChangeLocation(home);
 	}
@@ -187,27 +197,27 @@ void VisitHomeAndDepositPotato::Execute(Dogo* pDogo)
 	pDogo->AddToWealth(pDogo->PotatoAmount());
 
 	pDogo->SetPotatoAmount(0);
-
-	std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Depositing potatoes. Total savings now: " << pDogo->Wealth();
+	pDogo->GetPrintable()->Show_user(": Depositing potatoes. Total savings now:");
+	std::cout << " " << pDogo->Wealth();
 
 	if (pDogo->Hungry())
 	{
 		if (pDogo->Wealth() > 3)
 		{
-			std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": I'm hungry, I'll check if I have enough food. Woof test";
-
+			pDogo->GetPrintable()->Show_user(": I'm hungry, I'll check if I have enough food. Woof!");
+			pDogo->SetCooking(false);
 			pDogo->GetFSM()->ChangeState(CookPotatoes::Instance());
 		}
 		else
 		{
-			std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Not enought potatoes :C";
+			pDogo->GetPrintable()->Show_user(": Not enought potatoes :C");
 			pDogo->GetFSM()->ChangeState(EnterGardenAndDig::Instance());
 		}
 	}
 	//wealthy enough to have a well earned rest?
 	else if (pDogo->Wealth() >= ComfortLevel)
 	{
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ":WooHoo Hau Hau! Rich enough for now. Going to sleep";
+		pDogo->GetPrintable()->Show_user(": WooHoo Hau Hau! Rich enough for now. Going to sleep");
 
 		pDogo->GetFSM()->ChangeState(GoBedAndSleep::Instance());
 	}
@@ -225,6 +235,23 @@ void VisitHomeAndDepositPotato::Exit(Dogo* pDogo)
 
 bool VisitHomeAndDepositPotato::OnMessage(Dogo* pDogo, const Telegram& msg)
 {
+	SetTextColor(BACKGROUND_INTENSITY | FOREGROUND_BLUE | 112 | FOREGROUND_BLUE);
+	switch (msg.Msg)
+	{
+	case Msg_StrangerComing:
+	{
+		std::cout << "\nMessage received by " << GetNameOfEntity(pDogo->ID()) <<
+			" at time: " << Clock->GetCurrentTime();
+		SetTextColor(0 | 0 | 0 | 0);
+		std::cout << "\n";
+
+		pDogo->SetBarking(false);
+		pDogo->GetFSM()->ChangeState(BarkAtStranger::Instance());
+
+	}
+	return true;
+	}
+
 	//send msg to global message handler
 	return false;
 }
@@ -242,10 +269,10 @@ void CookPotatoes::Enter(Dogo* pDogo)
 
 	if (!pDogo->Cooking())
 	{
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Putting the potato in the oven";
+		pDogo->GetPrintable()->Show_user(": Putting the potato in the oven");
 
 		//send a delayed message myself so that I know when to take the potato are cooked
-		Dispatch->myDispatchMessage(15,                  //time delay
+		Dispatch->myDispatchMessage(4,                  //time delay
 			pDogo->ID(),           //sender ID
 			ent_Dogo,           //receiver ID
 			Msg_PotatoReady,        //msg
@@ -257,17 +284,18 @@ void CookPotatoes::Enter(Dogo* pDogo)
 
 void CookPotatoes::Execute(Dogo* pDogo)
 {
+
 	int random_num = rand() %3;
 	switch (random_num)
 	{
 	case 0:
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": still waiting.";
+		pDogo->GetPrintable()->Show_user(": still waiting.");
 		break;
 	case 1:
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": still waiting..";
+		pDogo->GetPrintable()->Show_user(": still waiting..");
 		break;
 	case 2:
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": still waiting...";
+		pDogo->GetPrintable()->Show_user(": still waiting...");
 		break;
 	default:
 		break;
@@ -276,7 +304,7 @@ void CookPotatoes::Execute(Dogo* pDogo)
 
 void CookPotatoes::Exit(Dogo* pDogo)
 {
-
+	pDogo->SetCooking(false);
 }
 
 bool CookPotatoes::OnMessage(Dogo* pDogo, const Telegram& msg)
@@ -288,13 +316,28 @@ bool CookPotatoes::OnMessage(Dogo* pDogo, const Telegram& msg)
 		{
 			std::cout << "\nMessage received by " << GetNameOfEntity(pDogo->ID()) <<
 				" at time: " << Clock->GetCurrentTime();
+			SetTextColor(0 | 0 | 0 | 0);
+			std::cout << "\n";
+			
 
-			std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": I'm coming!";
+			pDogo->GetPrintable()->Show_user(": I'm coming!");
 
 			pDogo->GetFSM()->ChangeState(EatPotatoes::Instance());
 			pDogo->SetCooking(false);
 		}
+		case Msg_StrangerComing:
+		{
+			std::cout << "\nMessage received by " << GetNameOfEntity(pDogo->ID()) <<
+				" at time: " << Clock->GetCurrentTime();
+			SetTextColor(0 | 0 | 0 | 0);
+			std::cout << "\n";
+
+			pDogo->SetBarking(false);
+			pDogo->GetFSM()->ChangeState(BarkAtStranger::Instance());
+
+		}
 		return true;
+
 	}
 	return false;
 }
@@ -311,11 +354,11 @@ void EatPotatoes::Enter(Dogo* pDogo)
 {
 	if (pDogo->Location() != home)							//check-- is possible
 	{
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Going to my lovely home! Yes sireee";
+		pDogo->GetPrintable()->Show_user(": Going to my lovely home! Yes sireee");
 
 		pDogo->ChangeLocation(home);
 	}
-	std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": " << "Smells Reaaal goood! :O";
+	pDogo->GetPrintable()->Show_user(": Smells Reaaal goood! :O");
 }
 
 void EatPotatoes::Execute(Dogo* pDogo)
@@ -323,7 +366,7 @@ void EatPotatoes::Execute(Dogo* pDogo)
 
 	if (!pDogo->Hungry())
 	{
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": " << "After such good food, one should relax!";
+		pDogo->GetPrintable()->Show_user(": After such good food, one should relax!");
 		pDogo->GetFSM()->ChangeState(GoBedAndSleep::Instance());
 	}
 	else 
@@ -332,16 +375,16 @@ void EatPotatoes::Execute(Dogo* pDogo)
 		switch (random_num)
 		{
 		case 0:
-			std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Am am am...";
+			pDogo->GetPrintable()->Show_user(": Am am am...");
 			break;
 		case 1:
-			std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": am..";
+			pDogo->GetPrintable()->Show_user(": Am..");
 			break;
 		case 2:
-			std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": " << "Oh Tastes real good!";
+			pDogo->GetPrintable()->Show_user(": Oh Tastes real good!");
 			break;
 		default:
-			std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": am am..";
+			pDogo->GetPrintable()->Show_user(": am am..");
 			break;
 		}
 		pDogo->DecreaseHungry();
@@ -350,10 +393,28 @@ void EatPotatoes::Execute(Dogo* pDogo)
 
 void EatPotatoes::Exit(Dogo* pDogo)
 {
-	std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": " << "Leave kitchen";
+	pDogo->GetPrintable()->Show_user(": Leave kitchen");
 }
 bool EatPotatoes::OnMessage(Dogo* pDogo, const Telegram& msg)
 {
+	SetTextColor(BACKGROUND_INTENSITY | FOREGROUND_BLUE | 112 | FOREGROUND_BLUE);
+	switch (msg.Msg)
+	{
+	case Msg_StrangerComing:
+	{
+		std::cout << "\nMessage received by " << GetNameOfEntity(pDogo->ID()) <<
+			" at time: " << Clock->GetCurrentTime();
+		SetTextColor(0 | 0 | 0 | 0);
+		std::cout << "\n";
+
+		pDogo->SetBarking(false);
+		pDogo->GetFSM()->ChangeState(BarkAtStranger::Instance());
+
+	}
+	return true;
+	}
+
+	//send msg to global message handler
 	return false;
 }
 
@@ -370,7 +431,7 @@ void GoBedAndSleep::Enter(Dogo* pDogo)
 {
 	if (pDogo->Location() != bed)
 	{
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": I need rest! Go to the bed.";
+		pDogo->GetPrintable()->Show_user(": I need rest! Go to the bed.");
 
 		pDogo->ChangeLocation(bed);
 	}
@@ -381,7 +442,7 @@ void GoBedAndSleep::Execute(Dogo* pDogo)
 	//if dogo is not fatigued start to dig for potato again.
 	if (!pDogo->Fatigued())
 	{
-		std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": What a God darn fantastic nap! Time to find more potato!";
+		pDogo->GetPrintable()->Show_user(": What a God darn fantastic nap! Time to find more potato!");
 
 		pDogo->GetFSM()->ChangeState(EnterGardenAndDig::Instance());
 	}
@@ -390,13 +451,28 @@ void GoBedAndSleep::Execute(Dogo* pDogo)
 	//sleep
 	pDogo->DecreaseFatigue();
 
-	std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": ZZzzz...";
+
+	int random_num = rand() % 3;
+	switch (random_num)
+	{
+	case 0:
+		pDogo->GetPrintable()->Show_user(": ZZzzz...");
+		break;
+	case 1:
+		pDogo->GetPrintable()->Show_user(": ZZzzz. Zzz..");
+		break;
+	case 2:
+		pDogo->GetPrintable()->Show_user(": zZz.");
+		break;
+	}
+	
+
 	}
 }
 
 void GoBedAndSleep::Exit(Dogo* pDogo)
 {
-	std::cout << "\n" << GetNameOfEntity(pDogo->ID()) << ": Leaving bed";
+	pDogo->GetPrintable()->Show_user(": Leaving bed");
 }
 
 bool GoBedAndSleep::OnMessage(Dogo* pDogo, const Telegram& msg)

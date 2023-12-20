@@ -79,7 +79,8 @@ void MessageDispatcher::myDispatchMessage(double  delay,
         cout << "\nInstant telegram dispatched at time: " << Clock->GetCurrentTime()
             << " by " << GetNameOfEntity(pSender->ID()) << " for " << GetNameOfEntity(pReceiver->ID())
             << ". Msg is " << MsgToStr(msg);
-
+        SetTextColor(0 | 0 | 0 | 0);
+        std::cout << "\n";
         //send the telegram to the recipient
         Discharge(pReceiver, telegram);
     }
@@ -98,7 +99,8 @@ void MessageDispatcher::myDispatchMessage(double  delay,
         cout << "\nDelayed telegram from " << GetNameOfEntity(pSender->ID()) << " recorded at time "
             << Clock->GetCurrentTime() << " for " << GetNameOfEntity(pReceiver->ID())
             << ". Msg is " << MsgToStr(msg);
-
+        SetTextColor(0 | 0 | 0 | 0);
+        std::cout << "\n";
     }
 }
 
@@ -124,12 +126,13 @@ void MessageDispatcher::DispatchDelayedMessages()
     {
         //read the telegram from the front of the queue
         const Telegram& telegram = *PriorityQ.begin();
-
+        SetTextColor(BACKGROUND_INTENSITY | 0 | 112 | 0);
         //find the recipient
         BaseGameEntity* pReceiver = EntityMgr->GetEntityFromID(telegram.Receiver);
 
         cout << "\nQueued telegram ready for dispatch: Sent to "
             << GetNameOfEntity(pReceiver->ID()) << ". Msg is " << MsgToStr(telegram.Msg);
+        SetTextColor(0 | 0 | 0 | 0);
 
         //send the telegram to the recipient
         Discharge(pReceiver, telegram);

@@ -14,13 +14,17 @@
 #include "StateMachine.h"
 #include "misc/ConsoleUtils.h"
 
+#include "NeighborPrintable.h"
+
 struct Telegram;
 
 class Neighbor : public BaseGameEntity
 {
 private: 
 	StateMachine<Neighbor>* m_pStateMachine;
-	   location_type m_Location;
+	NeighborPrintable<Neighbor>* m_pNPrintable;
+
+	location_type m_Location;
 
 	   bool in_home = false;
 public:
@@ -30,6 +34,8 @@ public:
 	{
 	//set up state machine
 	m_pStateMachine = new StateMachine<Neighbor>(this);
+	m_pNPrintable = new NeighborPrintable<Neighbor>(this, id);
+
 
 	m_pStateMachine->SetCurrentState(EnterDogoGarden::Instance());
 	}
@@ -38,6 +44,7 @@ public:
 	void Update();
 	virtual bool  HandleMessage(const Telegram& msg);
 	StateMachine<Neighbor>* GetFSM()const { return m_pStateMachine; }
+	NeighborPrintable<Neighbor>* GetPrintable()const { return m_pNPrintable; }
 
 	//-------------------------------------------------------------
 	location_type Location()const { return m_Location; }

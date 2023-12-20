@@ -8,6 +8,7 @@ bool Dogo::HandleMessage(const Telegram& msg)
 void Dogo::Update()
 {
 	SetTextColor(0 | 3 | 0 | 3);
+
 	//SetTextColor(BACKGROUND_RED | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 	//SetTextColor(8 | Fore);
 	m_iThirst += 1;

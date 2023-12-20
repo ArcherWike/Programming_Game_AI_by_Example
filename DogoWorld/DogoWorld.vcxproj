@@ -153,6 +153,8 @@
     <ClInclude Include="MessageTypes.h" />
     <ClInclude Include="Neighbor.h" />
     <ClInclude Include="NeighborOwnedStates.h" />
+    <ClInclude Include="NeighborPrintable.h" />
+    <ClInclude Include="Printable.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateMachine.h" />
     <ClInclude Include="Telegram.h" />

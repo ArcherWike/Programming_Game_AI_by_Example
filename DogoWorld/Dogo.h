@@ -13,7 +13,9 @@
 #include "DogoOwnedStates.h"
 #include "StateMachine.h"
 
-#include "misc/ConsoleUtils.h"
+
+
+#include "Printable.h"
 
 //check--
 //class State;
@@ -32,6 +34,7 @@ class Dogo : public BaseGameEntity
 private:
 	//an instance of the state machine class
 	StateMachine<Dogo>* m_pStateMachine;
+	Printable<Dogo>* m_pPrintable;
 	location_type m_Location;
 
 	/// Dogo stats and items
@@ -42,8 +45,10 @@ private:
 	int m_iFun;
 	int m_iFatigue;
 	bool m_iCooking;
+	bool m_bark;
 
 public:
+
 
 	Dogo(int id) :m_Location(bed),
 		m_iPotatoAmount(0),
@@ -53,10 +58,15 @@ public:
 		m_iFatigue(0),
 		m_iFun(0),
 		m_iCooking(false),
+		m_bark(false),
+
 		BaseGameEntity(id)
 	{
 		//set up state machine
 		m_pStateMachine = new StateMachine<Dogo>(this);
+
+		m_pPrintable = new Printable<Dogo>(this,id);
+
 
 		m_pStateMachine->SetCurrentState(GoBedAndSleep::Instance());
 
@@ -71,6 +81,7 @@ public:
 	virtual bool  HandleMessage(const Telegram& msg);
 	
 	StateMachine<Dogo>* GetFSM()const { return m_pStateMachine; }
+	Printable<Dogo>* GetPrintable()const { return m_pPrintable; }
 
 
     //-------------------------------------------------------------
@@ -94,8 +105,11 @@ public:
 	void DecreaseHungry() { m_iHungry -= 5; }
 	void IncreaseHungry() { m_iHungry += 1; }
 
-	bool Cooking()const { return m_iCooking; }
-	void SetCooking(bool val) { m_iCooking = val; }
+	bool Cooking()const { return m_bark; }
+	void SetCooking(bool val) { m_bark = val; }
+
+	bool Barking()const { return m_bark; }
+	void SetBarking(bool val) { m_bark = val; }
 
 	bool Thirsty()const;
 	void BuyAndDrinkWater() { m_iThirst = 0; m_iPotatoInHome -= 2; }

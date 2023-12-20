@@ -22,43 +22,45 @@ EnterDogoGarden* EnterDogoGarden::Instance()
 
 void EnterDogoGarden::Enter(Neighbor* pNeighbor)
 {
-	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": Oh whaa This garden it's really pretty!";
+	pNeighbor->GetPrintable()->Show_user(": Oh whaa This garden it's really pretty!");
 }
 
 void EnterDogoGarden::Execute(Neighbor* pNeighbor)
 {
-	if (!pNeighbor->AtDogoArea())
-	{
-		std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": oh! Dog what have you got in the garden?";
-		//send a delayed message myself so that I know when to take the potato are cooked
-		Dispatch->myDispatchMessage(15,                  //time delay
-			pNeighbor->ID(),           //sender ID
-			ent_Dogo,           //receiver ID
-			Msg_StrangerComing,        //msg
-			0);
-		pNeighbor->SetAtDogoArea(true);
-
-	}
-	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": *looking at the garden*";
+	//	if (!pNeighbor->AtDogoArea())
+	//	{
+	//		pNeighbor->GetPrintable()->Show_user(": oh! Dog what have you got in the garden?");
+	//		//send a delayed message myself so that I know when to take the potato are cooked
+	//		Dispatch->myDispatchMessage(2,                  //time delay
+	//			pNeighbor->ID(),           //sender ID
+	//			ent_Dogo,           //receiver ID
+	//			Msg_StrangerComing,        //msg
+	//			0);
+	//		pNeighbor->SetAtDogoArea(true);
+	//
+	//	}
+	//	pNeighbor->GetPrintable()->Show_user(": *looking at the garden*");
+	//}
 }
 
 void EnterDogoGarden::Exit(Neighbor* pNeighbor)
 {
-	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": aaaa..";
-	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": *jump back*";
-	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": I'm running away from here uh aaaa...";
+	pNeighbor->GetPrintable()->Show_user(": Uhh.. *jump back*");
+	pNeighbor->GetPrintable()->Show_user(": I'm running away from here aaaa...");
 }
 
 bool EnterDogoGarden::OnMessage(Neighbor* pNeighbor, const Telegram& msg)
 {
+	SetTextColor(160 | 224 | 160 | 224);
 	switch (msg.Msg)
 	{
 	case Msg_DogoIsDangerous:
 	{
 		std::cout << "\nMessage received by " << GetNameOfEntity(pNeighbor->ID()) <<
 			" at time: " << Clock->GetCurrentTime();
-
-		std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": aaa I'm scared of that dog! aaaaa!";
+		SetTextColor(0 | 0 | 0 | 0);
+		std::cout << "\n";
+		pNeighbor->GetPrintable()->Show_user(": Aaa! I'm scared of that dog! Aaa!");
 
 		pNeighbor->GetFSM()->ChangeState(EscapesHome::Instance());
 	}
@@ -76,7 +78,7 @@ EscapesHome* EscapesHome::Instance()
 
 void EscapesHome::Enter(Neighbor* pNeighbor)
 {
-	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": it's time to go";
+	pNeighbor->GetPrintable()->Show_user(": it's time to go");
 }
 
 void EscapesHome::Execute(Neighbor* pNeighbor)
@@ -85,24 +87,24 @@ void EscapesHome::Execute(Neighbor* pNeighbor)
 	switch (random_num)
 	{
 	case 0:
-		std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": ugh It's close...";
+		pNeighbor->GetPrintable()->Show_user(": Ugh It's close...");
 		pNeighbor->GetFSM()->ChangeState(WatchTV::Instance());
 		break;
 	case 1:
-		std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": Aa..";
+		pNeighbor->GetPrintable()->Show_user(": Aa..");
 	case 2:
-		std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": Am I sure I'm running in the right direction?? ";
+		pNeighbor->GetPrintable()->Show_user(": Am I sure I'm running in the right direction?? ");
 		break;
 	default:
-		std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": aaA!";
+		pNeighbor->GetPrintable()->Show_user(": aaA!");
 		break;
 	}
-	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": aaaaaa I'm run away";
+	pNeighbor->GetPrintable()->Show_user(": I'm run away!!");
 }
 
 void EscapesHome::Exit(Neighbor* pNeighbor)
 {
-	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": uff! I can see my lovely home";
+	pNeighbor->GetPrintable()->Show_user(": uff! I can see my lovely home");
 }
 
 bool EscapesHome::OnMessage(Neighbor* pNeighbor, const Telegram& msg)
@@ -120,27 +122,26 @@ WatchTV* WatchTV::Instance()
 
 void WatchTV::Enter(Neighbor* pNeighbor)
 {
-	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": zobaczmy co ciekawgo leci";
 }
 
 void WatchTV::Execute(Neighbor* pNeighbor)
 {
-	int random_num = rand() % 5;
+	int random_num = rand() % 10;
 	switch (random_num)
 	{
-	case 0:
-		std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": wylacze tv ..";
+	case 4:
+		//std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": wylacze tv ..";
 		pNeighbor->GetFSM()->ChangeState(EnterDogoGarden::Instance());
 		break;
 	default:
-		std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": zmienia kanal";
+		//std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": zmienia kanal";
 		break;
 	}
 }
 
 void WatchTV::Exit(Neighbor* pNeighbor)
 {
-	std::cout << "\n" << GetNameOfEntity(pNeighbor->ID()) << ": ide sie przejsc.";
+	pNeighbor->GetPrintable()->Show_user(": I'm going for a walk");
 }
 
 bool WatchTV::OnMessage(Neighbor* pNeighbor, const Telegram& msg)
